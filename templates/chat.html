@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='chat.css') }}">
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-box" id="chat-box">
+      {% for msg in mensagens %}
+        <div class="mensagem {% if msg.id_remetente == session['usuario_id'] %}enviada{% else %}recebida{% endif %}">
+          <p>{{ msg.conteudo }}</p>
+          <small>{{ msg.data_envio.strftime("%H:%M") }}</small>
+        </div>
+      {% endfor %}
+    </div>
+
+    <form method="POST" class="chat-input">
+      <input type="text" name="mensagem" placeholder="Digite sua mensagem..." required>
+      <button type="submit">Enviar</button>
+    </form>
+  </div>
+
+  <script>
+    // Auto-scroll para a última mensagem
+    const box = document.getElementById('chat-box');
+    box.scrollTop = box.scrollHeight;
+  </script>
+</body>
+</html>

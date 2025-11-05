@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <title>Redefinir Senha</title>
+  <style>
+    :root {
+      --azul: #007bff;
+      --amarelo: #ffcc00;
+      --bg: #f7f9fc;
+      --text: #222;
+      --muted: #666;
+      --white: #fff;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
+
+    body {
+      font-family: 'Poppins', Arial, sans-serif;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 420px;
+      background: var(--white);
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+      padding: 40px 30px;
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 10px;
+      font-size: 24px;
+      color: var(--text);
+    }
+
+    p {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 30px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    input[type="password"] {
+      padding: 12px 14px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 15px;
+      outline: none;
+      transition: border 0.2s;
+    }
+
+    input:focus {
+      border-color: var(--azul);
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.15);
+    }
+
+    button {
+      background: linear-gradient(90deg, var(--azul), var(--amarelo));
+      color: var(--white);
+      border: none;
+      padding: 12px;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(0, 123, 255, 0.3);
+    }
+
+    .foot {
+      margin-top: 20px;
+      font-size: 14px;
+      color: var(--muted);
+    }
+
+    .foot a {
+      color: var(--azul);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .foot a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Redefinir Senha</h1>
+    <p>Digite sua nova senha abaixo para concluir a redefinição.</p>
+
+    <form method="POST">
+      <input type="password" name="nova_senha" placeholder="Nova senha" required>
+      <button type="submit">Confirmar</button>
+    </form>
+
+    <div class="foot">
+      <a href="/login">Voltar ao login</a>
+    </div>
+  </div>
+</body>
+</html>

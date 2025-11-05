@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Publicar Serviço</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    .upload-container {
+    position: relative;
+    border: 2px dashed #ccc;
+    border-radius: 12px;
+    padding: 30px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.3s, background-color 0.2s;
+    background-color: #fafafa;
+    margin-top: 6px;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 40px 10px;
+    }
+
+    .card {
+      background-color: #fff;
+      width: 100%;
+      max-width: 500px;
+      border-radius: 12px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      padding: 30px;
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 25px;
+      color: #333;
+      font-weight: 600;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+      color: #555;
+    }
+
+    .input-wrapper {
+      position: relative;
+      margin-top: 6px;
+    }
+
+    .input-wrapper i {
+      position: absolute;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
+      color: #aaa;
+      font-size: 16px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    textarea {
+      width: 100%;
+      padding: 12px 12px 12px 35px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      transition: border-color 0.3s;
+      display: block;
+    }
+
+    input[type="text"]:focus,
+    input[type="number"]:focus,
+    textarea:focus {
+      border-color: #ff6f00;
+      outline: none;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    input[type="file"] {
+      padding: 6px;
+      margin-top: 6px;
+      width: 100%;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 20px;
+      margin-top: 10px;
+    }
+
+    .radio-group label {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      font-weight: normal;
+    }
+
+    #endereco-field {
+      display: none;
+      margin-top: 10px;
+    }
+
+    button {
+      width: 100%;
+      margin-top: 25px;
+      padding: 14px;
+      border: none;
+      border-radius: 6px;
+      background: linear-gradient(to right, #336195, #FFDE59);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+
+    button:hover {
+      background: linear-gradient(to right, #336195, #FFDE59);
+    }
+
+    @media (max-width: 550px) {
+      .card {
+        padding: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h2>Publicar Serviço</h2>
+  <form method="POST" action="/publicar-servico" enctype="multipart/form-data">
+    <label>Título do serviço</label>
+    <div class="input-wrapper">
+      <i class="fa-solid fa-pen-to-square"></i>
+      <input type="text" name="titulo" placeholder="Ex: Lavador de carros, Editor de vídeo, Social Media">
+    </div>
+
+    <label>Dias de disponíveis</label>
+    <div class="input-wrapper">
+      <i class="fa-solid fa-calendar-days"></i>
+      <input type="text" name="dias" placeholder="Ex: Seg, Qua, Sex">
+    </div>
+
+    <label>Horários </label>
+    <div class="input-wrapper">
+      <i class="fa-solid fa-clock"></i>
+      <input type="text" name="horarios" placeholder="Ex: 09:00 - 18:00" required>
+    </div>
+
+    <label>Valor </label>
+    <div class="input-wrapper">
+      <i class="fa-solid fa-money-bill-wave"></i>
+      <input type="number" step="0.01" name="valor" placeholder="R$" required>
+    </div>
+
+    <label>Descrição </label>
+    <div class="input-wrapper">
+      <i class="fa-solid fa-file-lines"></i>
+      <textarea name="descricao" placeholder="Descreva seu serviço..." required></textarea>
+    </div>
+
+  <label>Inserir imagens</label>
+<div class="upload-container" id="upload-container">
+  <input type="file" id="imagens" name="imagens" accept="image/*">
+  <div class="upload-text">
+    <i class="fa-solid fa-cloud-arrow-up fa-2x"></i>
+    <p>Arraste suas imagens aqui ou clique para selecionar</p>
+  </div>
+</div>
+
+    <label>Selecione:</label>
+    <div class="radio-group">
+      <label><input type="radio" name="atendimento" value="localizacao" required> Localização</label>
+      <label><input type="radio" name="atendimento" value="domicilio"> Atendimento a domicílio</label>
+    </div>
+
+    <div id="endereco-field">
+      <label>Endereço:</label>
+      <input type="text" name="endereco" placeholder="Informe seu endereço">
+    </div>
+
+    <button type="submit"><i class="fa-solid fa-upload"></i> Publicar</button>
+  </form>
+</div>
+
+<script>
+  const radios = document.querySelectorAll('input[name="atendimento"]');
+  const enderecoField = document.getElementById('endereco-field');
+
+  radios.forEach(radio => {
+    radio.addEventListener('change', () => {
+      if (radio.value === 'localizacao' && radio.checked) {
+        enderecoField.style.display = 'block';
+      } else if (radio.value === 'domicilio' && radio.checked) {
+        enderecoField.style.display = 'none';
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
