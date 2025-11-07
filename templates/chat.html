@@ -27,5 +27,18 @@
     const box = document.getElementById('chat-box');
     box.scrollTop = box.scrollHeight;
   </script>
+
+  <script>
+  setInterval(() => {
+    fetch(window.location.href)
+      .then(res => res.text())
+      .then(html => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        document.getElementById("chat-box").innerHTML =
+          doc.getElementById("chat-box").innerHTML;
+      });
+  }, 3000); // Atualiza a cada 3 segundos
+</script>
 </body>
 </html>

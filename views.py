@@ -4,6 +4,7 @@ from cadastro import inserir_usuario, get_db_connection
 from login import autenticar_usuario
 from redefinir_senha import redefinir_senha
 from publicar_servico import publicar_servico
+from cadastro import get_db_connection
 
 def setup_routes(app):
 
@@ -86,3 +87,34 @@ def setup_routes(app):
         session.pop('usuario_nome', None)
         flash("Você foi desconectado com sucesso!", "info")
         return redirect(url_for('homepage'))
+    
+    @app.route('/chat/<int:id_servico>/<int:id_destinatario>', methods=['GET', 'POST'])
+    def chat(id_servico, id_destinatario):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        id_remetente = session.get('usuario_id')
+
+        if request.method == 'POST':
+            conteudo = request.form['mensagem']
+            if conteudo.strip():
+             cursor.execute('''
+                    INSERT INTO mensagens (id_remetente, id_destinatario, id_servico, conteudo)
+                    VALUES (%s, %s, %s, %s)
+                ''', (id_remetente, id_destinatario, id_servico, conteudo))
+            conn.commit()
+            return redirect(url_for('chat', id_servico=id_servico, id_destinatario=id_destinatario))
+
+    # Carregar mensagens do chat atual
+        cursor.execute('''
+            SELECT * FROM mensagens 
+            WHERE id_servico = %s AND (
+                (id_remetente = %s AND id_destinatario = %s)
+                OR
+                (id_remetente = %s AND id_destinatario = %s)
+            )
+       
+            ORDER BY data_envio ASC
+        ''', (id_servico, id_remetente, id_destinatario, id_destinatario, id_remetente))
+        mensagens = cursor.fetchall()
+
+        return render_template('chat.html', mensagens=mensagens, id_servico=id_servico, id_destinatario=id_destinatario)
