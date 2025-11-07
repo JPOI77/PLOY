@@ -1,9 +1,14 @@
 from flask import Flask
 from views import setup_routes  # importa as rotas
 import pymysql  
+import os
+from dotenv import load_dotenv
+
+#carregando arquivos do .env
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = "Sasuke321!"
+app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 
 # Registra todas as rotas
 setup_routes(app)

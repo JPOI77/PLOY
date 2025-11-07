@@ -1,10 +1,15 @@
 from flask import Flask, request, redirect, render_template,url_for, session
 import os
 from werkzeug.utils import secure_filename
-from cadastro import get_db_connection
+from db_config import get_db_connection
 import pymysql
 
+# Configurações de upload
+MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16MB limit
+
 app = Flask(__name__)
+app.config['MAX_CONTENT_LENGTH'] = MAX_CONTENT_LENGTH
+
 
 
 
@@ -12,11 +17,22 @@ app = Flask(__name__)
 UPLOAD_FOLDER = 'static/imagens'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# Extensões permitidas
+# Configurações de upload
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+ALLOWED_MIME_TYPE = {'image/png', 'image/jpg', 'image/jpeg', 'image/gif'}
 
-def allowed_file(filename):
-    print("Teste da função de segurança!")
+
+def allowed_file(filename, mimetype):
+
+    if mimetype not in ALLOWED_MIME_TYPE:
+        return False
+    
+    if not filename:
+        return False
+    
+    if len(filename) > 255:  # Prevent too long filenames
+        return False
+    
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 
