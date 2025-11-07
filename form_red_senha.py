@@ -2,20 +2,24 @@ from flask import Flask, render_template, request, redirect, url_for, flash
 import pymysql
 import uuid
 import smtplib
+import os
+from dotenv import load_dotenv
 from datetime import datetime, timedelta
 from email.mime.text import MIMEText
 #Import da função de conexão com o Banco de Dados
-from cadastro import get_db_connection
+from db_config import get_db_connection
+
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = 'Sasuke321!'
+app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 
 
 # Configuração do e-mail 
 SMTP_SERVER = 'smtp.gmail.com'
 SMTP_PORT = 587
 EMAIL_REMETENTE = 'ploy.online.services@gmail.com'
-EMAIL_SENHA = 'bzek mfzt yuff yqcw'  # Senha de App do gmail
+EMAIL_SENHA = os.environ.get("EMAIL_PASSWORD")  # Senha de App do gmail
 
 @app.route('/esqueci-senha', methods=['GET', 'POST'])
 def esqueci_senha():

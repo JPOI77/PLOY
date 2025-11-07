@@ -1,5 +1,5 @@
 # Ambientes virtuais
-venv/
+vensensiveisv/
 .venv/
 
 # Cache Python
@@ -10,3 +10,6 @@ __pycache__/
 .vscode/
 .idea/
 *.code-workspace
+
+#Senhas e textos sensiveis 
+.env

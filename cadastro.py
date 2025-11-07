@@ -1,29 +1,13 @@
 import pymysql.cursors
-
+from db_config import get_db_connection
 from flask import Flask, render_template, request, redirect,url_for,g
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
 app = Flask(__name__)
-app.secret_key = "Sasuke321!"
-
-db_config = { 
-    "host": "localhost",
-    "user": "PLOY",
-    "password": "Naruto123!",
-    "database": "PLOY"
-}
-
-def get_db_connection():
-    return pymysql.connect(
-        host = db_config["host"],
-        user = db_config["user"],
-        password= db_config["password"],
-        database= db_config["database"],
-        cursorclass = pymysql.cursors.DictCursor
-    )
-
-def close_db(exception):
-    db = g.pop('db', None)
-    if db is not None:
-        db.close()
+app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 
 def inserir_usuario():
         print("REQUEST METHOD:", request.method)

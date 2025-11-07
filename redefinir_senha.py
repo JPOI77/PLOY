@@ -1,9 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for, flash
 from datetime import datetime, timedelta
-from cadastro import get_db_connection
+from db_config import get_db_connection
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = "Sasuke321!"
+app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 
 @app.route('/redefinir-senha/<token>', methods=['GET', 'POST'])
 def redefinir_senha(token):
