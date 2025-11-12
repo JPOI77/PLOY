@@ -4,7 +4,7 @@ from cadastro import inserir_usuario, get_db_connection
 from login import autenticar_usuario
 from redefinir_senha import redefinir_senha
 from publicar_servico import publicar_servico
-from cadastro import get_db_connection
+from db_config import get_db_connection
 
 def setup_routes(app):
 
@@ -93,6 +93,11 @@ def setup_routes(app):
         conn = get_db_connection()
         cursor = conn.cursor()
         id_remetente = session.get('usuario_id')
+        if "usuario_id" not in session:
+            return redirect(url_for("login")), flash("Você precisa estar logado para utilizar o chat!")
+        
+        if id_remetente == id_destinatario:
+            return redirect(url_for("homepage"))
 
         if request.method == 'POST':
             conteudo = request.form['mensagem']
@@ -118,3 +123,49 @@ def setup_routes(app):
         mensagens = cursor.fetchall()
 
         return render_template('chat.html', mensagens=mensagens, id_servico=id_servico, id_destinatario=id_destinatario)
+
+    @app.route('/meus-servicos')
+    def meus_servicos():
+        if "usuario_id" not in session:
+           flash("Você precisa estar logado para acessar esta página.", "warning")
+           return redirect(url_for("login"))
+
+        id_usuario = session["usuario_id"]
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+    # Buscar serviços publicados por este usuário
+        cursor.execute('''
+            SELECT s.id, s.titulo, s.valor, s.localizacao, s.imagem
+            FROM servicos s
+            WHERE s.id_usuario = %s
+            ''', (id_usuario,))
+        servicos = cursor.fetchall()
+
+    # Buscar conversas iniciadas para os serviços desse usuário
+        cursor.execute('''
+            SELECT DISTINCT
+            m.id_servico,
+            s.titulo AS servico_titulo,
+            CASE 
+            WHEN m.id_remetente = %s THEN m.id_destinatario
+            ELSE m.id_remetente
+            END AS id_outro_usuario,
+            u.nome AS nome_outro_usuario,
+            MAX(m.data_envio) AS ultima_mensagem
+            FROM mensagens m
+            JOIN servicos s ON m.id_servico = s.id
+            JOIN usuarios u ON u.id = CASE 
+                                    WHEN m.id_remetente = %s THEN m.id_destinatario
+                                    ELSE m.id_remetente
+                                  END
+            WHERE m.id_remetente = %s OR m.id_destinatario = %s
+            GROUP BY m.id_servico, id_outro_usuario, u.nome, s.titulo
+            ORDER BY ultima_mensagem DESC
+        ''', (id_usuario, id_usuario, id_usuario, id_usuario))
+        chats = cursor.fetchall()
+
+
+        conn.close()
+
+        return render_template('meus_servicos.html', servicos=servicos, chats=chats)

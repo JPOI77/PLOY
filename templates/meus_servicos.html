@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Meus Serviços</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+    .container-geral {
+      display: flex;
+      height: 90vh;
+      margin: 1rem;
+      gap: 1rem;
+    }
+
+    /* === Nova versão estilizada da lista de conversas === */
+    .chats-container {
+      width: 25%;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      padding: 1rem;
+      overflow-y: auto;
+    }
+
+    .chats-container h3 {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: #336195;
+      text-align: center;
+    }
+
+    .chats-container ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .chats-container li {
+      margin-bottom: 0.8rem;
+    }
+
+    .chats-container a {
+      display: block;
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      background: linear-gradient(90deg, #336195, #FFDE59);
+      color: #fff;
+      text-decoration: none;
+      font-weight: 500;
+      transition: all 0.25s ease;
+    }
+
+    .chats-container a:hover {
+      opacity: 0.9;
+      transform: translateX(3px);
+    }
+
+    .chats-container p {
+      text-align: center;
+      color: #777;
+      font-size: 0.95rem;
+      margin-top: 1rem;
+    }
+
+    /* === Container dos serviços === */
+    .servicos-container {
+      flex-grow: 1;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 1rem;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      overflow: hidden;
+      transition: transform 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+    }
+
+    .card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+    }
+
+    .card-body {
+      padding: 0.8rem;
+    }
+
+    .card-body h4 {
+      margin-bottom: 0.3rem;
+    }
+
+    @media (max-width: 900px) {
+      .container-geral {
+        flex-direction: column;
+      }
+
+      .chats-container {
+        width: 100%;
+        position: static;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">PLOY</div>
+    <ul class="nav-links">
+      <li><a href="/">Início</a></li>
+      <li><a href="/publicar-servico">Anunciar</a></li>
+      <li><a href="/logout">Sair</a></li>
+    </ul>
+  </nav>
+
+  <div class="container-geral">
+
+    <!-- Lateral esquerda: lista de chats -->
+    <div class="chats-container">
+      <h3>Conversas</h3>
+      {% if chats %}
+        <ul>
+          {% for chat in chats %}
+            <li>
+              <a href="{{ url_for('chat', id_servico=chat.id_servico, id_destinatario=chat.id_outro_usuario) }}">
+                💬 {{ chat.nome_outro_usuario }} — {{ chat.servico_titulo }}
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>Nenhum chat iniciado ainda.</p>
+      {% endif %}
+    </div>
+
+    <!-- Lado direito: serviços publicados -->
+    <div class="servicos-container">
+      {% for s in servicos %}
+      <div class="card">
+        <img src="{{ url_for('static', filename='imagens/' + s.imagem) }}" alt="{{ s.titulo }}">
+        <div class="card-body">
+          <h4>{{ s.titulo }}</h4>
+          <p><strong>R$ {{ s.valor }}</strong></p>
+          <p>{{ s.localizacao }}</p>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+
+</body>
+</html>
