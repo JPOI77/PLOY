@@ -48,26 +48,39 @@ def publicar_servico():
         titulo = request.form.get("titulo")
         dias = request.form.get("dias")
         horarios = request.form.get("horarios")
-        valor = request.form.get("valor")
+        tipoValor = request.form.get("tipagem")
+        valorHora = request.form.get("horaValue")
+        valorDia = request.form.get("diaValue")
         descricao = request.form.get("descricao")
         atendimento = request.form.get("atendimento")
         endereco = request.form.get("endereco")
+        valor = ""
 
         print(id_usuario)
-        if valor:
-            valor.replace(",", ".")
+        if valorHora:
+            valorHora.replace(",", ".")
+        elif valorDia:
+            valorDia.replace(",", ".")
 
-        # Define o valor da localização
+        # Define o valor da localização caso seja atendimento a domicílio
         if atendimento == "domicilio":
             localizacao = "Atendimento a domicílio"
         else:
             localizacao = endereco if endereco else "Não informado"
 
+        #Define valor com base no que foi selecionado pelo usuário
+        if tipoValor == "valorCombinar":
+            valor = "Valor a combinar!"
+        elif tipoValor == "valorHora":
+            valor = valorHora + "/h"
+        elif tipoValor == "valorDia":
+            valor = valorDia + "/d"
+
         # Processar a imagem
         imagem = request.files.get("imagens")
         nome_arquivo = None
 
-        if imagem and allowed_file(imagem.filename):
+        if imagem and allowed_file(imagem.filename, imagem.mimetype):
             filename = secure_filename(imagem.filename)
             caminho_imagem = os.path.join(app.config['UPLOAD_FOLDER'], filename)
             imagem.save(caminho_imagem)

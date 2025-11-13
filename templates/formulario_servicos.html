@@ -166,10 +166,21 @@
       <input type="text" name="horarios" placeholder="Ex: 09:00 - 18:00" required>
     </div>
 
-    <label>Valor </label>
-    <div class="input-wrapper">
-      <i class="fa-solid fa-money-bill-wave"></i>
-      <input type="number" step="0.01" name="valor" placeholder="R$" required>
+    <label>Tipo de Valor:</label>
+    <div class="radio-group">
+      <label><input type="radio" name="tipagem" value="valorHora" required> Valor por hora</label>
+      <label><input type="radio" name="tipagem" value="valorDia"> Diária</label>
+      <label><input type="radio" name="tipagem" value="valorCombinar"> Valor a combinar</label>
+    </div>
+
+    <div id="tipagemValorHora-field">
+      <label>Valor por hora:</label>
+      <input type="number" step = "0.01" name="horaValue" placeholder="Ex: 27.98">
+    </div>
+
+    <div id="tipagemValorDia-field">
+      <label>Valor por dia:</label>
+      <input type="number" step = "0.01" name="diaValue" placeholder="Ex: 9.99">
     </div>
 
     <label>Descrição </label>
@@ -212,6 +223,33 @@
         enderecoField.style.display = 'block';
       } else if (radio.value === 'domicilio' && radio.checked) {
         enderecoField.style.display = 'none';
+      }
+    });
+  });
+</script>
+
+<script>
+  const radiosValores = document.querySelectorAll('input[name="tipagem"]');
+  const valorHoraField = document.getElementById('tipagemValorHora-field');
+  const valorDiaField = document.getElementById('tipagemValorDia-field');
+
+  valorHoraField.style.display = 'none';
+  valorDiaField.style.display = 'none';
+
+
+  radiosValores.forEach(radio => {
+    radio.addEventListener('change', () => {
+      
+
+      if (radio.value === 'valorHora') {
+        valorHoraField.style.display = 'block';
+        valorDiaField.style.display = "none";
+      } else if (radio.value === 'valorDia') {
+        valorDiaField.style.display = 'block';
+        valorHoraField.style.display = "none";
+      } else if (radio.value === "valorCombinar"){
+        valorHoraField.style.display = 'none';
+        valorDiaField.style.display = 'none';
       }
     });
   });
