@@ -14,6 +14,6 @@ app.secret_key = os.environ.get("FLASK_SECRET_KEY")
 setup_routes(app)
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5002)
+    app.run(debug=True, port=9000)
 
 
