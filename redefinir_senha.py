@@ -3,6 +3,7 @@ from datetime import datetime, timedelta
 from db_config import get_db_connection
 from dotenv import load_dotenv
 import os
+from criptobcrypt import hash_senha
 
 load_dotenv()
 
@@ -26,7 +27,7 @@ def redefinir_senha(token):
                 return redirect(url_for('homepage'))
 
         if request.method == 'POST':
-            nova_senha = request.form['nova_senha']
+            nova_senha = hash_senha(request.form['nova_senha'])
 
             cursor.execute("UPDATE usuarios SET senha = %s WHERE id = %s",
                            (nova_senha, dados_token['user_id']))

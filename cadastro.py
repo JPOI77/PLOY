@@ -3,6 +3,7 @@ from db_config import get_db_connection
 from flask import Flask, render_template, request, redirect,url_for,g
 from dotenv import load_dotenv
 import os
+from criptobcrypt import hash_senha
 
 load_dotenv()
 
@@ -15,7 +16,7 @@ def inserir_usuario():
         if request.method == 'POST':
             username = request.form.get('nome', '').strip()
             email = request.form.get('email', '').strip().lower()
-            senha = request.form.get('senha', '')
+            senha = hash_senha(request.form.get('senha', ''))
 
         # Validações básicas
 

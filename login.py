@@ -4,6 +4,7 @@ import os
 from dotenv import load_dotenv
 import pymysql.cursors
 from db_config import get_db_connection
+from criptobcrypt import check_senha
 
 load_dotenv()
 
@@ -31,7 +32,7 @@ def autenticar_usuario():
                     print(usuario['nome'])
                     print(usuario['senha'])
                     print(senha)
-                    if senha == usuario['senha']:
+                    if check_senha(senha, usuario['senha']) == True:
                        print("deu certo<3")
                        return usuario
                     else:
