@@ -21,13 +21,15 @@ def inserir_usuario():
         if request.method == 'POST':
             username = request.form.get('nome', '').strip()
             email = request.form.get('email', '').strip().lower()
-            senha = hash_senha(request.form.get('senha', ''))
+            senha = request.form.get('senha', '')
 
         # Validações básicas
          
         if not validar_senha(senha):
             flash("A senha deve conter ao menos: 1 letra maiúscula, 1 minúscula, 1 número, 1 caractere especial e ter no mínimo 8 caracteres.")
             return redirect(url_for("register"))
+        
+        senha_hash = hash_senha(senha)
 
         db = get_db_connection()
         try:
@@ -41,7 +43,7 @@ def inserir_usuario():
 
                 # Insere novo usuário ao banco de dados
                 sql_insert = "INSERT INTO usuarios (nome, email, senha) VALUES (%s, %s, %s)"
-                cur.execute(sql_insert, (username, email, senha))
+                cur.execute(sql_insert, (username, email, senha_hash))
                 db.commit()
 
             return redirect(url_for('login'))

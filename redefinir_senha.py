@@ -3,11 +3,8 @@ from datetime import datetime, timedelta
 from db_config import get_db_connection
 from dotenv import load_dotenv
 import os
-<<<<<<< HEAD
 from criptobcrypt import hash_senha
-=======
 import re
->>>>>>> 6dc3728 (Exigência de requisitos para criação e redefinição de senhas(Segurança))
 
 load_dotenv()
 
@@ -35,14 +32,16 @@ def redefinir_senha(token):
                 return redirect(url_for('homepage'))
 
         if request.method == 'POST':
-            nova_senha = hash_senha(request.form['nova_senha'])
+            nova_senha = request.form['nova_senha']
 
             if not validar_senha(nova_senha):
                 flash("A senha deve conter ao menos: 1 letra maiúscula, 1 minúscula, 1 número, 1 caractere especial e ter no mínimo 8 caracteres.")
                 return render_template("redefinir-senha.html")
+            
+            nova_senha_hash = hash_senha(nova_senha)
 
             cursor.execute("UPDATE usuarios SET senha = %s WHERE id = %s",
-                           (nova_senha, dados_token['user_id']))
+                           (nova_senha_hash, dados_token['user_id']))
             cursor.execute("DELETE FROM reset_tokens WHERE token = %s", (token,))
             conexao.commit()
 
