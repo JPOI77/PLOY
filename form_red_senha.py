@@ -40,7 +40,7 @@ def esqueci_senha():
                 )
                 conexao.commit()
 
-                link = f'http://localhost:5002/redefinir-senha/{token}'
+                link = f'http://localhost:9000/redefinir-senha/{token}'
                 enviar_email(email, link)
                 flash('Um link de redefinição foi enviado ao seu e-mail.', 'info')
             else:

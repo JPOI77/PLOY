@@ -1,14 +1,19 @@
 import pymysql.cursors
 from db_config import get_db_connection
-from flask import Flask, render_template, request, redirect,url_for,g
+from flask import Flask, render_template, request, redirect,url_for,g, flash
 from dotenv import load_dotenv
 import os
 from criptobcrypt import hash_senha
+import re
 
 load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY")
+
+def validar_senha(senha):
+     padrao = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{5,}$"
+     return bool(re.match(padrao, senha))
 
 def inserir_usuario():
         print("REQUEST METHOD:", request.method)
@@ -19,10 +24,10 @@ def inserir_usuario():
             senha = hash_senha(request.form.get('senha', ''))
 
         # Validações básicas
-
-        if len(senha) < 5:
-            return redirect(url_for("register", message='Senha deve ter ao menos 5 caracteres.'))
-
+         
+        if not validar_senha(senha):
+            flash("A senha deve conter ao menos: 1 letra maiúscula, 1 minúscula, 1 número, 1 caractere especial e ter no mínimo 8 caracteres.")
+            return redirect(url_for("register"))
 
         db = get_db_connection()
         try:

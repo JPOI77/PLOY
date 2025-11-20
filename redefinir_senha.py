@@ -3,12 +3,20 @@ from datetime import datetime, timedelta
 from db_config import get_db_connection
 from dotenv import load_dotenv
 import os
+<<<<<<< HEAD
 from criptobcrypt import hash_senha
+=======
+import re
+>>>>>>> 6dc3728 (Exigência de requisitos para criação e redefinição de senhas(Segurança))
 
 load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY")
+
+def validar_senha(senha):
+     padrao = r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{5,}$"
+     return bool(re.match(padrao, senha))
 
 @app.route('/redefinir-senha/<token>', methods=['GET', 'POST'])
 def redefinir_senha(token):
@@ -28,6 +36,10 @@ def redefinir_senha(token):
 
         if request.method == 'POST':
             nova_senha = hash_senha(request.form['nova_senha'])
+
+            if not validar_senha(nova_senha):
+                flash("A senha deve conter ao menos: 1 letra maiúscula, 1 minúscula, 1 número, 1 caractere especial e ter no mínimo 8 caracteres.")
+                return render_template("redefinir-senha.html")
 
             cursor.execute("UPDATE usuarios SET senha = %s WHERE id = %s",
                            (nova_senha, dados_token['user_id']))
