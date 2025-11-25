@@ -9,43 +9,64 @@ body {
   font-family: 'Segoe UI', Tahoma, sans-serif;
   background-color: #f2f3f4;
   color: #333;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 /* Navbar */
 .navbar {
-  background: linear-gradient(to right, #336195, #FFDE59);
+  background: linear-gradient(to right, #507cae);
   color: white;
-  padding: 1rem 2rem;
+  padding: 1.5rem 4rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
 
-.logo {
-  font-size: 1.5rem;
-  font-weight: bold;
-}
-
 .nav-links {
   list-style: none;
   display: flex;
-  gap: 1rem;
+  gap: 2rem;
 }
 
 .nav-links a {
   color: white;
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 800;
+  position: relative; 
+  padding: 5px 0;    
+  transition: color 0.3s ease;
 }
 
-/* Container principal */
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  width: 0;
+  height: 2px; 
+  bottom: 0;
+  left: 50%;
+  background-color: #FFDE59;
+  transition: all 0.3s ease-in-out;
+  transform: translateX(-50%);
+}
+
+.nav-links a:hover::after {
+  width: 100%;
+}
+
+.nav-links a:hover {
+  opacity: 0.9; 
+}
+
 .container {
   max-width: 1200px;
   margin: 2rem auto;
   padding: 0 1rem;
+  flex: 1;
+  width: 100%;
 }
 
-/* Cards */
 .card-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -88,4 +109,37 @@ body {
 .card-location {
   font-size: 0.9rem;
   color: #666;
+}
+
+.main-footer {
+  background-color: #333;
+  color: #ccc;
+  padding: 3rem 1rem;
+  margin-top: 4rem; /* Empurra o footer para longe do conteúdo */
+  text-align: center;
+}
+
+.footer-logo {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #FFDE59;
+  margin-bottom: 1rem;
+}
+
+.footer-links {
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 2rem;
+}
+
+.footer-links a {
+  color: white;
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: #FFDE59;
+  text-decoration: underline;
 }

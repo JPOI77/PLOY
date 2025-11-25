@@ -169,3 +169,42 @@ def setup_routes(app):
         conn.close()
 
         return render_template('meus_servicos.html', servicos=servicos, chats=chats)
+    
+    # ... código existente ...
+
+    @app.route('/excluir-servico/<int:id_servico>', methods=['POST'])
+    def excluir_servico(id_servico):
+        # Verifica se o usuário está logado
+        if "usuario_id" not in session:
+            flash("Você precisa estar logado para realizar esta ação.", "warning")
+            return redirect(url_for("login"))
+
+        id_usuario = session["usuario_id"]
+        conn = get_db_connection()
+        
+        try:
+            with conn.cursor() as cursor:
+                # 1. Segurança: Verificar se o serviço pertence mesmo ao usuário logado
+                cursor.execute("SELECT id, imagem FROM servicos WHERE id = %s AND id_usuario = %s", (id_servico, id_usuario))
+                servico = cursor.fetchone()
+
+                if servico:
+                    #Excluir mensagens relacionadas
+                    cursor.execute("DELETE FROM mensagens WHERE id_servico = %s", (id_servico,))
+                    
+                    #Excluir o serviço
+                    cursor.execute("DELETE FROM servicos WHERE id = %s", (id_servico,))
+                    conn.commit()
+                    
+                    flash("Serviço excluído com sucesso!", "success")
+                else:
+                    flash("Erro: Serviço não encontrado ou você não tem permissão para excluí-lo.", "danger")
+        
+        except Exception as e:
+            conn.rollback()
+            print(f"Erro ao excluir: {e}")
+            flash("Ocorreu um erro ao tentar excluir o serviço.", "danger")
+        finally:
+            conn.close()
+
+        return redirect(url_for('meus_servicos'))
